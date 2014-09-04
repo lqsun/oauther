@@ -33,7 +33,8 @@ $app->post('/userLogin', function () use ($app) {
 		if(!$client->verifyAppKey($getArray)){
 			echo $app->ErrorMsg['ERROR_APP_KEY'];
 		}else{
-			$app->redirect($client->redirectUrl($getArray));
+			$random_code = $client->authorizeCode($getArray,$_POST['userName']);
+			$app->redirect($client->getRedirectUrl($getArray,$random_code));
 		}
 	}
 });
@@ -42,16 +43,14 @@ $app->post('/userLogin', function () use ($app) {
  * https://www.example.com/oauther/authorize?client_id=YOUR_CLIENT_ID&response_type=code&redirect_uri=YOUR_REGISTERED_REDIRECT_URI
  * https://www.example.com/oauther/access_token?client_id=YOUR_CLIENT_ID&client_secret=YOUR_CLIENT_SECRET&grant_type=authorization_code&redirect_uri=YOUR_REGISTERED_REDIRECT_URI&code=CODE
  *
- * $fp = fsockopen("www.mydomain.com",80);
- * fputs($fp,"GET /downloads HTTP/1.0");
- * fputs($fp,"Host: www.mydomain.com");
- * fputs($fp,"Authorization: Basic " . base64_encode("user:pass") . "");
- * fpassthru($fp);
- *
- * get from $_SERVER['PHP_AUTH_USER']和$_SERVER['PHP_AUTH_PW']
- *
  */
 $app->post('/access_token', function () use ($app) {
+	$client = new client($app->db);
+	if(!$client->verifyAccessTokenRequest($_POST)){
+		echo "Illegel AccessToken Request";
+	}else{
+		echo $client->authorizeToken($_POST['code']);
+	}
 
 });
 

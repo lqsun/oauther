@@ -4,6 +4,8 @@ define('DB_HOST', '127.0.0.1');
 define('DB_NAME', 'oauther');
 define('DB_USER', 'root');
 define('DB_PASS', 'sunliqun');
+define('MEM_HOST', '127.0.0.1');
+define('MEM_PORT', '11211');
 
 $ErrorMsg = array(
 	'ERROR_USERNAME_OR_PASSWORD'=>'Wrong user/password',
